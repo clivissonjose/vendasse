@@ -48,9 +48,9 @@ public class ProductController {
     }
 
     @PutMapping("/price/{id}")
-    public ResponseEntity<ProductResponseDTO> updatePrice(@RequestBody UpdateProductPriceDTO newPrice, @PathVariable Long id){
+    public ResponseEntity<ProductResponseDTO> updatePrice(@RequestBody UpdateProductPriceDTO dto, @PathVariable Long id){
 
-        Product product = this.productService.updatePrice(id, newPrice.getNewPrice());
+        Product product = this.productService.updatePrice(id, dto.getNewPrice());
 
         ProductResponseDTO responseDTO = ProductMapper.toDTO(product);
 
@@ -68,7 +68,6 @@ public class ProductController {
                 .toList();
 
         return ResponseEntity.ok(response);
-
 
     }
 
