@@ -31,11 +31,6 @@ public class ProductService {
         String cidade = viaCepApi.getCityByCep(cep);
         product.setCity(cidade);
 
-        System.out.println("CEP: " + cep);
-        System.out.println("Cidade: " + cidade);
-        System.out.println("City no objeto: " + product.getCity());
-
-
         return this.productRepository.save(product);
 
     }
