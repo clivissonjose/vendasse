@@ -1,10 +1,17 @@
 package com.vendasse.models;
 
+import com.vendasse.enums.Role;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Entity
+import java.util.Collection;
+import java.util.List;
+
+@Entity(name = "Users")
 @Table(name = "Users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +27,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
 
     public String getEmail() {
@@ -47,19 +54,35 @@ public class User {
         this.name = name;
     }
 
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        if(this.role == Role.ADMIN)
+          return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
