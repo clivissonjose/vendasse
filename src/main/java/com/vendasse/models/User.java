@@ -35,7 +35,8 @@ public class User implements UserDetails {
         this.name = name;
         this.role = role;
     }
-
+    public User() {
+    }
 
     public String getEmail() {
         return email;
@@ -91,6 +92,26 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }

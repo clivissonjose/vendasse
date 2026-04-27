@@ -1,14 +1,18 @@
 package com.vendasse.controllers;
 
 import com.vendasse.dtos.user.AuthenticationDTO;
+import com.vendasse.dtos.user.LoginResponseDTO;
 import com.vendasse.dtos.user.RegisterDTO;
 import com.vendasse.models.User;
 import com.vendasse.repositories.UserRepository;
+import com.vendasse.security.TokenService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +24,15 @@ public class AuthenticationController {
 
     private AuthenticationManager authenticationManager;
     private UserRepository userRepository;
+    private TokenService tokenService;
 
-    AuthenticationController(AuthenticationManager authenticationManager, UserRepository userRepository){
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    AuthenticationController(AuthenticationManager authenticationManager, UserRepository userRepository, TokenService tokenService){
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.tokenService = tokenService;
     }
 
     @PostMapping("/login")
@@ -33,7 +42,8 @@ public class AuthenticationController {
 
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
