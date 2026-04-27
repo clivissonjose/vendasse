@@ -29,6 +29,13 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    public User (String email, String name, String password, Role role){
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+    }
+
 
     public String getEmail() {
         return email;
